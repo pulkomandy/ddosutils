@@ -18,10 +18,7 @@ static const char	rcs_id[] = "$Id: hookdbt.c 1.1 1997/05/11 22:32:42 Graham Rel 
 #  include <sys/movedata.h>		/*  dosmem...()  */
 #  include <sys/exceptn.h>		/*  __djgpp_set_ctrl_c()  */
 #  include <go32.h>			/*  _go32_want_ctrl_break()  */
-#else
-#  include <mem.h>		/*  movedata()  */
 #endif
-#include <dos.h>	/*  putting it here avoids a DJGPP warning from sys/exceptn.h with -Wshadow  */
  
 #include "global.h"
 #include "msdos.h"

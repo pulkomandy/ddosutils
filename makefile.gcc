@@ -17,7 +17,7 @@
 RM = del
 
 EXES = ddir.exe dcopy.exe drm2txt.exe bas2txt.exe
-OBJS = djgppsml.o hookdbt.o dmabound.o diskbios.o msdos.o wildcard.o
+OBJS = djgppsml.o wildcard.o linux.o
 
 CFLAGS = -W -Wall -pedantic -Wpointer-arith -Wbad-function-cast -Wcast-qual \
          -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
@@ -77,4 +77,4 @@ msdos.o: msdos.c global.h debug.h msdos.h
 wildcard.o: wildcard.c global.h debug.h wildcard.h
 ddir.o: ddir.c global.h debug.h hookdbt.h diskbios.h dmabound.h wildcard.h
 dcopy.o: dcopy.c global.h debug.h hookdbt.h diskbios.h dmabound.h wildcard.h
-
+linux.o: linux.c

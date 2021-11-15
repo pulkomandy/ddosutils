@@ -11,7 +11,6 @@ static const char	rcs_id[] = "$Id: dmabound.c 1.1 1997/05/08 21:30:54 Graham Rel
 #endif
 
 #include <stdlib.h>
-#include <dos.h>
 
 #include "global.h"
 #include "dmabound.h"

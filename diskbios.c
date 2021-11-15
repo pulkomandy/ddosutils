@@ -8,8 +8,6 @@
 #ifdef	__DJGPP__
 #  include <dpmi.h>
 #  include <sys/movedata.h>		/*  dosmemget()  */
-#else
-#  include <dos.h>
 #endif
 
 #include "global.h"

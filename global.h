@@ -21,10 +21,12 @@ typedef unsigned char	Byte;
 typedef unsigned short	Word;
 typedef unsigned long	DWord;
 
+#ifndef __HAIKU__
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
+#endif
 
-#ifdef	__DJGPP__
+#ifdef	__GNUC__
 #  define FAR
 #else
 #  define FAR	far
