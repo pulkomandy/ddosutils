@@ -64,3 +64,10 @@ void update_disk_base_table()
 void unhook_disk_base_table()
 {
 }
+
+void strlwr(char* string)
+{
+	int i;
+	for (i = 0; string[i]; i++)
+		string[i] = tolower(string[i]);
+}
