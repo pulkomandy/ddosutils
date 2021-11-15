@@ -11,6 +11,8 @@
 
 int fd;
 
+const char* FILENAME;
+
 void* malloc_dma_page_aligned_block(int size)
 {
 	return malloc(size);
@@ -25,7 +27,7 @@ void bios_reset_drive(int drivenum)
 {
 	if (fd != 0)
 		close(fd);
-	fd = open("disk.vdk", O_RDONLY);
+	fd = open(FILENAME, O_RDONLY);
 	// TODO read track and side count
 	// TODO guess sector size from filesize?
 }

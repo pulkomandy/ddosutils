@@ -57,35 +57,9 @@ static Bool	file_copy (Byte drive_num, uint start_entry, const char *filename,
 static Byte
 get_drive_num (const char * const path)
 {
-	static const char	valid_drives[] = "abAB0123";
-
-	/*  Accept 'A', 'A:', 'A:/' or 'A:\'   */
-	
-	if (strchr (valid_drives, path[0]) != NULL
-	    && (path[1] == '\0'
-	        || (path[1] == ':'
-	            && (path[2] == '\0'
-	                || (path[3] == '\0' 
-	                    && (path[2] == '/'
-	                        || path[2] == '\\'))))))
-		switch (path[0])
-		{
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-				return ((Byte) path[0] - '0');
-
-			case 'a':
-			case 'b':
-				return ((Byte) path[0] - 'a');
-
-			case 'A':
-			case 'B':
-				return ((Byte) path[0] - 'A');
-		}
-
-	return (0xff);
+	extern const char* FILENAME;
+	FILENAME = path;
+	return 0;
 }
 
 static Byte
