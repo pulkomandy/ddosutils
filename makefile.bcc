@@ -1,0 +1,63 @@
+#
+#  Borland C++ (v3.1 upwards) makefile for Dragon DOS disk utils
+#
+#  Graham E. Kinns  <gekinns@iee.org>  Apr '97
+#
+#  $Id: makefile.bcc 1.2 1997/05/08 22:03:36 Graham Rel $
+#
+#  $Log: makefile.bcc $
+#  Revision 1.2  1997/05/08 22:03:36  Graham
+#  Fixed .PHONY
+#
+#  Revision 1.1  1997/05/08 21:10:38  Graham
+#  .exe dependencies from .c to .obj
+#
+#  Revision 1.0  1997/04/15  20:16:56  Graham
+#  Initial revision
+#
+.autodepend
+.swap
+
+RM = del
+
+EXES = ddir.exe dcopy.exe drm2txt.exe bas2txt.exe
+OBJS = hookdbt.obj dmabound.obj diskbios.obj msdos.obj wildcard.obj
+
+CFLAGS = -w -2- -v- -f- -k- -O1 -ms
+
+!ifdef	DEBUG
+OBJS   = $(OBJS) debug.obj
+CFLAGS = $(CFLAGS) -DDEBUG
+!endif	# DEBUG
+
+!ifdef	RCS
+CFLAGS = $(CFLAGS) -DRCS -w-use
+!endif	# RCS
+
+all : $(EXES)
+PHONY : all clean clean_exes
+
+.c.obj :
+	$(CC) -c $(CFLAGS) $<
+
+ddir.exe : ddir.obj $(OBJS)
+	$(CC) $(CFLAGS) -e$< $**
+
+dcopy.exe : dcopy.obj $(OBJS)
+	$(CC) $(CFLAGS) -e$< $**
+
+drm2txt.exe : drm2txt.obj
+	$(CC) $(CFLAGS) -e$< $**
+
+bas2txt.exe : bas2txt.obj bastoken.obj
+	$(CC) $(CFLAGS) -e$< $**
+
+clean :
+	$(RM) *.obj
+
+clean_exes :
+	$(RM) bas2txt.exe
+	$(RM) drm2txt.exe
+	$(RM) ddir.exe
+	$(RM) dcopy.exe
+

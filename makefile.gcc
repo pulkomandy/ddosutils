@@ -1,0 +1,80 @@
+#
+#  DJGPP v2.0 Makefile for Dragon DOS disk utils
+#
+#  Graham E. Kinns  <gekinns@iee.org>  Apr '97
+#
+#  $Log: makefile.gcc $
+#  Revision 1.2  1997/05/08 21:32:44  Graham
+#  Fixed CFLAGS with -DRCS
+#
+#  Revision 1.1  1997/05/07 15:09:46  Graham
+#  General tidy up
+#
+#  Revision 1.0  1997/04/15 20:23:00  Graham
+#  Initial revision
+#
+
+RM = del
+
+EXES = ddir.exe dcopy.exe drm2txt.exe bas2txt.exe
+OBJS = djgppsml.o hookdbt.o dmabound.o diskbios.o msdos.o wildcard.o
+
+CFLAGS = -W -Wall -pedantic -Wpointer-arith -Wbad-function-cast -Wcast-qual \
+         -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+         -Wnested-externs -Winline 
+
+ifdef	DEBUG
+CFLAGS += -g
+else	#  !DEBUG
+CFLAGS += -s -O3
+endif
+
+ifdef	RCS
+CFLAGS += -DRCS
+endif
+
+all : $(EXES)
+.PHONY : all clean clean_exes
+
+.c.o :
+	$(CC) -c $(CFLAGS) $< -o $@
+
+djgppsml.o : djgppsml.c
+	$(CC) -c $(CFLAGS) -DNO_GLOB_FN -DNO_LOAD_ENV_FILE -DNO_NPX_SETUP \
+-DNO_IS_EXEC -DDOS_CRT0_FLAGS djgppsml.c -o $@
+
+ddir.exe : ddir.o $(OBJS)
+	$(CC) $(CFLAGS) $+ -o $@
+
+dcopy.exe : dcopy.o $(OBJS)
+	$(CC) $(CFLAGS) $+ -o $@
+
+drm2txt.exe : drm2txt.o djgppsml.o
+	$(CC) $(CFLAGS) $+ -o $@
+
+bas2txt.exe : bas2txt.o bastoken.o djgppsml.o
+	$(CC) $(CFLAGS) $+ -o $@
+
+clean :
+	$(RM) *.o
+
+clean_exes :
+	$(RM) bas2txt.exe
+	$(RM) drm2txt.exe
+	$(RM) ddir.exe
+	$(RM) dcopy.exe
+
+# This isn't the GNU way but .. for %f in (*.c) do gcc -MM %f >> depend.op
+#djgppsml.o: djgppsml.c
+drm2txt.o: drm2txt.c global.h debug.h
+bastoken.o: bastoken.c bastoken.h
+bas2txt.o: bas2txt.c global.h debug.h bastoken.h
+debug.o: debug.c global.h debug.h
+hookdbt.o: hookdbt.c global.h debug.h msdos.h hookdbt.h
+dmabound.o: dmabound.c global.h debug.h
+diskbios.o: diskbios.c global.h debug.h diskbios.h
+msdos.o: msdos.c global.h debug.h msdos.h
+wildcard.o: wildcard.c global.h debug.h wildcard.h
+ddir.o: ddir.c global.h debug.h hookdbt.h diskbios.h dmabound.h wildcard.h
+dcopy.o: dcopy.c global.h debug.h hookdbt.h diskbios.h dmabound.h wildcard.h
+
