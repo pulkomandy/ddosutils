@@ -12,6 +12,8 @@
 int fd;
 
 const char* FILENAME;
+static int headersize;
+static int sides;
 
 void* malloc_dma_page_aligned_block(int size)
 {
@@ -28,8 +30,22 @@ void bios_reset_drive(int drivenum)
 	if (fd != 0)
 		close(fd);
 	fd = open(FILENAME, O_RDONLY);
-	// TODO read track and side count
-	// TODO guess sector size from filesize?
+
+	unsigned char byte[2];
+
+	// Get header size (needed to know where the first secor data starts
+	lseek(fd, 2, SEEK_SET);
+	read(fd, byte, 2);
+
+	headersize = byte[0] | (byte[1] << 8);
+
+	// Get number of sides (needed to convert track and side number to position in file)
+	lseek(fd, 9, SEEK_SET);
+	read(fd, byte, 1);
+	sides = byte[0];
+
+	// All other fields in the VDK header are currently not used. Assume all disks have 18 sectors
+	// of 256 bytes per track.
 }
 
 int bios_read_sectors(int drive, int track, int side, int sector, int count, unsigned char* buffer, int secsize)
@@ -38,11 +54,9 @@ int bios_read_sectors(int drive, int track, int side, int sector, int count, uns
 	int i;
 	int sizeRead;
 
-	track *= 2;
-	track += side;
-	offset = secsize * (sector - 1 + 18 * track);
+	offset = secsize * (sector - 1 + 18 * (track * sides + side));
 
-	lseek(fd, offset + 12, SEEK_SET);
+	lseek(fd, offset + headersize, SEEK_SET);
 	sizeRead = read(fd, buffer, secsize * count);
 
 	return 0;
