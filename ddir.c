@@ -3,16 +3,21 @@
  *
  *	Directory of Dragon DOS disk
  *
- *	Usage: 'ddir A:', 'ddir 1: *.bin'
+ *	Usage: 'ddir input_file.vdk', 'ddir input_file.vdk *.bin'
  *
  *	Graham E. Kinns  <gekinns@iee.org>  Apr '97
+ *	Ported to Linux by Adrien Destugues <pulkomandy.tk> 2021
  *
  *	$Log: ddir.c $
+ *	  Revision 2.1 2021/12/12
+ *	  Minor tidying
+ *	  Revision 2.0  2021/11/16
+ *	  Linux port
  *	  Revision 1.0  1997/04/15  20:56:54  Graham
  *	  Initial revision
  *
  */
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,11 +36,11 @@ _ExceptInit (void)
 #endif	/*  BC++ v4.0x  */
 
 #ifdef	RCS
-static const char	rcs_id[] = "$Id: ddir.c 1.0 1997/04/15 20:56:54 Graham Exp $";
+static const char	rcs_id[] = "$Id: ddir.c 2.1 2021/12/12 Linux Exp $";
 #endif
 
 #define PROG_NAME	"ddir"
-#define VERSION		"1.0"
+#define VERSION		"2.1"
 
 #define	MAX_DIR_ENTS	160
 
@@ -271,20 +276,20 @@ main (int argc, char *argv[])
 	uint	file_count;
 
 	fputs (PROG_NAME " v" VERSION " -- Dragon DOS disk directory\n"
-	       "Graham E. Kinns <gekinns@iee.org> " __DATE__ "\n"
+	       "Original by Graham E. Kinns <gekinns@iee.org>\nLinux port by Adrien Destugues <pulkomandy.tk>\nCompiled on " __DATE__ "\n"
 	       "\n", stderr);
 
 	if (argc < 2
 	    || argv[1][0] == '-' || argv[1][0] == '/')
 	{
-		fprintf (stderr, "Usage: %s drive: [filename_wildcard]\n\n", argv[0]);
+		fprintf (stderr, "Usage: %s input_file.vdk [filename_wildcard]\n\n", argv[0]);
 		return (1);
 	}
 
 	drive_num = get_drive_num (argv[1]);
 	if (drive_num == 0xff)
 	{
-		fprintf (stderr, "Error: invalid drive specifier in '%s'\n", argv[1]);
+		fprintf (stderr, "Error: invalid VDK image specifier in '%s'\n", argv[1]);
 		return (1);
 	}
 
@@ -334,7 +339,7 @@ main (int argc, char *argv[])
 	if (num_tracks != (Byte) ~buf[254]
 	    || num_sectors != (Byte) ~buf[255])
 	{
-		fprintf (stderr, "Not a Dragon DOS disk\n");
+		fprintf (stderr, "Not a Dragon DOS VDK image\n");
 		return (1);
 	}
 	num_sides = (num_sectors > 18 ? 2 : 1);
