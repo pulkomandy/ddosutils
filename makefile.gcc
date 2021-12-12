@@ -4,6 +4,13 @@
 #  Graham E. Kinns  <gekinns@iee.org>  Apr '97
 #
 #  $Log: makefile.gcc $
+#  Revision 1.4 2021/12/12 Gareth Halfacree
+#  Change RM from del to rm
+#  Reduced warnings
+#
+#  Revision 1.3 2021/11/16 pulkomandy.tk
+#  *NIX port
+#
 #  Revision 1.2  1997/05/08 21:32:44  Graham
 #  Fixed CFLAGS with -DRCS
 #
@@ -14,15 +21,12 @@
 #  Initial revision
 #
 
-RM = del
+RM = rm
 
 EXES = ddir.exe dcopy.exe drm2txt.exe bas2txt.exe
 OBJS = djgppsml.o wildcard.o linux.o
 
-CFLAGS = -W -Wall -pedantic -Wpointer-arith -Wbad-function-cast -Wcast-qual \
-         -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
-         -Wnested-externs -Winline 
-
+CFLAGS = -Wno-implicit-function-declaration
 ifdef	DEBUG
 CFLAGS += -g
 else	#  !DEBUG

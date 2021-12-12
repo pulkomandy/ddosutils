@@ -1,22 +1,27 @@
 /*
- *	dcopy.c    $Id: dcopy.c 1.1 1997/05/08 21:59:08 Graham Rel $
+ *	dcopy.c    $Id: dcopy.c 2.1 2021/12/12 Linux Rel $
  *
  *	Copies files from Dragon DOS disk
  *
- *	Usage: 'dcopy A:', 'dcopy 1: *.bin', 'dcopy B: *.bin *.bi_'
- *	       'dcopy A: *.bin c:\temp\'
+ *	Usage: 'dcopy input_file.vdk', 'dcopy input_file.vdk *.bin', 'dcopy input_file.vdk *.bin *.bi_'
+ *	       'dcopy input_file.vdk *.bin /tmp/'
  *
  *	Graham E. Kinns  <gekinns@iee.org>  Apr '97
+ *      Ported to Linux by Adrien Destugues <pulkomandy.tk> 2021
  *
  *	$Log: dcopy.c $
- *	Revision 1.1  1997/05/08 21:59:08  Graham
- *	Rename directory in split_filepath() prototype to fix warning.
- *
- *	Revision 1.0  1997/04/15 21:05:38  Graham
- *	Initial revision
+ *        Revision 2.1 2021/12/12
+ *        Minor tidying
+ *        Revision 2.0  2021/11/16
+ *        Linux port
+ *	  Revision 1.1  1997/05/08 21:59:08  Graham
+ *	  Rename directory in split_filepath() prototype to fix warning.
+ *	  Revision 1.0  1997/04/15 21:05:38  Graham
+ *	  Initial revision
  */
+
 #ifdef	RCS
-static const char	rcs_id[] = "$Id: dcopy.c 1.1 1997/05/08 21:59:08 Graham Rel $";
+static const char	rcs_id[] = "$Id: dcopy.c 2.1 2021/12/12 Linux Rel $";
 #endif
  
 #include <stdio.h>
@@ -37,7 +42,7 @@ _ExceptInit (void)
 #endif	/*  BC++ v4.0x  */
 
 #define PROG_NAME	"dcopy"
-#define VERSION		"1.0"
+#define VERSION		"2.1"
 
 #define	MAX_DIR_ENTS	160
 
@@ -300,20 +305,20 @@ main (int argc, char *argv[])
 	char	*output_filemask;
 
 	fputs (PROG_NAME " v" VERSION " -- Copies files from Dragon DOS disk\n"
-	       "Graham E. Kinns <gekinns@iee.org> " __DATE__ "\n"
+	       "Original by Graham E. Kinns <gekinns@iee.org>\nLinux port by Adrien Destugues <pulkomandy.tk>\nCompiled on " __DATE__ "\n"
 	       "\n", stderr);
 
 	if (argc < 2
 	    || argv[1][0] == '-' || argv[1][0] == '/')
 	{
-		fprintf (stderr, "Usage: %s drive: [filename_wildcard] [dir\\][output_wildcard]\n\n", argv[0]);
+		fprintf (stderr, "Usage: %s input_file.vdk [filename_wildcard] [dir\\][output_wildcard]\n\n", argv[0]);
 		return (1);
 	}
 
 	drive_num = get_drive_num (argv[1]);
 	if (drive_num == 0xff)
 	{
-		fprintf (stderr, "Error: invalid drive specifier in '%s'\n", argv[1]);	
+		fprintf (stderr, "Error: invalid input file specifier in '%s'\n", argv[1]);	
 		return (1);
 	}
 
@@ -358,7 +363,7 @@ main (int argc, char *argv[])
 	if (num_tracks != (Byte) ~buf[254]
 	    || num_sectors != (Byte) ~buf[255])
 	{
-		fprintf (stderr, "Not a Dragon DOS disk\n");
+		fprintf (stderr, "Not a Dragon DOS VDK image\n");
 		return (1);
 	}
 
